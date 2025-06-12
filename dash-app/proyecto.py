@@ -91,14 +91,14 @@ cartas = dash.html.Div([
 #Creando Graficos
 grafico = dash.html.Div(dash.dcc.Graph(id="grafico_barras"))
 
-#Graficos de pastel
+#Graficos de dispersión
 grafico_matrix = dash.html.Div([
     dash.dcc.Graph(id='scatter_plot',
                            figure=px.scatter_matrix(data,
                                                     dimensions=['math score', 'reading score', 'writing score'],
                                                     title='Correlacion entre calificaciones'))
 ])
-
+#Grafico de barras
 grafico_pastel = dash.html.Div([
     dash.dcc.Graph(id='pie_plot',
                            figure=px.pie(names=porcentaje.index,
@@ -145,7 +145,9 @@ app.layout = dash.html.Div([
     dbc.Row(navbar),
     dbc.Row(menu),
     dbc.Row(cartas),
-    dbc.Row(grafico)
+    dbc.Row(grafico),
+    dbc.Row(grafico_matrix),
+    dbc.Row(grafico_pastel)
 ])
 
 if __name__ == '__main__':
