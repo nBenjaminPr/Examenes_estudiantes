@@ -73,6 +73,36 @@ cartas = dash.html.Div([
 ], style={'marginTop': '20px', 'marginLeft': '20px', 'marginRight': '20px'})
 
 
+@app.callback(
+    dash.Output('promedio_mat', 'children'),
+    dash.Output('promedio_lec', 'children'),
+    dash.Output('promedio_esc', 'children'),
+    dash.Output('grafico_barras', 'figure'),
+    dash.Input('menu', 'value')
+)
+
+def update_dashboard(value):
+    data_filtrada = data if value == 'todos' else data[data['gender'] == value]
+
+    promedio_mat = data_filtrada['math score'].mean().round(2)
+    promedio_lec = data_filtrada['reading score'].mean().round(2)
+    promedio_esc = data_filtrada['writing score'].mean().round(2)
+
+    promedio_por_nivel = data_filtrada.groupby('parental level of education', as_index=False)[['math score', 'reading score', 'writing score']].mean()
+    promedio_por_nivel['promedio_general'] = promedio_por_nivel[['math score', 'reading score', 'writing score']].mean(axis=1).round(2)
+
+    grafico_barras = px.bar(
+        promedio_por_nivel,
+        x='parental level of education',
+        y='promedio_general',
+        title='Promedio por nivel educativo de los padres',
+        labels={
+            'parental level of education': 'Nivel educativo de los padres',
+            'promedio_general':'Promedio de los examenes'
+        }
+    )
+    return promedio_mat, promedio_lec, promedio_esc, grafico_barras
+
 
 app.layout = dash.html.Div([
     dbc.Row(navbar),
