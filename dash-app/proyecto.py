@@ -91,7 +91,22 @@ def update_dashboard(value):
     promedio_lec = data_filtrada['reading score'].mean().round(2)
     promedio_esc = data_filtrada['writing score'].mean().round(2)
 
-    return promedio_mat, promedio_lec, promedio_esc
+    promedio_por_nivel = data_filtrada.groupby('parental level of education', as_index=False)[['math score', 'reading score', 'writing score']].mean()
+    promedio_por_nivel['promedio_general'] = promedio_por_nivel[['math score', 'reading score', 'writing score']].mean(axis=1).round(2)
+
+    grafico_barras = px.bar(
+        promedio_por_nivel,
+        x='parental level of education',
+        y='promedio_general',
+        title='Promedio por nivel educativo de los padres',
+        labels={
+            'parental level of education': 'Nivel educativo de los padres',
+            'promedio_general':'Promedio de los examenes'
+        }
+    )
+        
+
+    return promedio_mat, promedio_lec, promedio_esc, grafico_barras
 
 
 app.layout = dash.html.Div([
