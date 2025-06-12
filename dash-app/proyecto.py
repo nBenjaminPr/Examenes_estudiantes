@@ -47,6 +47,33 @@ menu = dash.html.Div(
     }
 )
 
+cartas = dash.html.Div([
+    dbc.Row([
+        dbc.Col(
+        dbc.Card([
+            dash.html.H4('Matemáticas'),
+            dash.html.H5(id='promedio_mat')
+        ],body=True, id='card_mat')
+        ),
+        dbc.Col(
+            dbc.Card([
+                dash.html.H4('Lectura'),
+                dash.html.H5(id='promedio_lec')
+            ],body=True, id='card_lec')
+        ),
+        dbc.Col(
+            dbc.Card([
+                dash.html.H4('Escritura'),
+                dash.html.H5(id='promedio_esc')
+            ],body=True, id='card_esc')
+        ),
+    ]
+        
+    )
+], style={'marginTop': '20px', 'marginLeft': '20px', 'marginRight': '20px'})
+
+
+
 app.layout = dash.html.Div([
     dbc.Row(navbar),
     dbc.Row(menu),
