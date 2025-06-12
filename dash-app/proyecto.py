@@ -9,6 +9,21 @@ data = pd.read_csv('C:/Users/ale_v/OneDrive/Desktop/Nico/Proyectos/Examenes_estu
 #Añadiendo columna de promedios
 data['promedio'] = data[['math score', 'reading score', 'writing score']].mean(axis=1).round(2)
 
+
+#Nivel de educación
+def clasificar_nivel(promedio):
+    if promedio >= 90:
+        return 'Alto'
+    elif promedio >= 70:
+        return 'Medio'
+    else:
+        return 'Bajo'
+    
+data['nivel'] = data['promedio'].apply(clasificar_nivel)
+porcentaje = data['nivel'].value_counts(normalize=True) * 100
+
+
+
 #diseño con bootstrap 
 
 ###
@@ -76,11 +91,28 @@ cartas = dash.html.Div([
 #Creando Graficos
 grafico = dash.html.Div(dash.dcc.Graph(id="grafico_barras"))
 
+#Graficos de pastel
+grafico_matrix = dash.html.Div([
+    dash.dcc.Graph(id='scatter_plot',
+                           figure=px.scatter_matrix(data,
+                                                    dimensions=['math score', 'reading score', 'writing score'],
+                                                    title='Correlacion entre calificaciones'))
+])
+
+grafico_pastel = dash.html.Div([
+    dash.dcc.Graph(id='pie_plot',
+                           figure=px.pie(names=porcentaje.index,
+                                         values=porcentaje.values,
+                                         title='Distribucion por niveles'))
+])
+
+
+
 @app.callback(
     dash.Output('promedio_mat', 'children'),
     dash.Output('promedio_lec', 'children'),
     dash.Output('promedio_esc', 'children'),
-    dash.Output('promedio_esc', 'grafico_barras'),
+    dash.Output('grafico_barras', 'figure'),
     dash.Input('menu', 'value')
 )
 
